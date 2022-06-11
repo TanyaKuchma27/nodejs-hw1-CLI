@@ -43,7 +43,7 @@ async function addContact(name, email, phone) {
     };
     contacts.push(newContact);
     updateContacts(contacts);;
-    return newBook;
+    return newContact;
 }
 
 module.exports = {
