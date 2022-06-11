@@ -1,10 +1,24 @@
 const contacts = require("./contacts");
+const { Command } = require('commander');
 
-const invokeAction = async ({action, id, name, email, phone}) => {
+const program = new Command();
+
+program
+    .option('-a, --action <type>', 'choose action')
+    .option('-i, --id <type>', 'user id')
+    .option('-n, --name <type>', 'user name')
+    .option('-e, --email <type>', 'user email')
+    .option('-p, --phone <type>', 'user phone');
+
+program.parse(process.argv);
+
+const argv = program.opts();
+
+const invokeAction = async ({ action, id, name, email, phone }) => {
     switch (action) {
         case "list":
             const result = await contacts.listContacts();
-            console.log(result);
+            console.table(result);
             break;
         case "get":
             const contact = await contacts.getContactById(id);
@@ -13,7 +27,7 @@ const invokeAction = async ({action, id, name, email, phone}) => {
         case "add":
             const newContact = await contacts.addContact(name, email, phone);
             console.log(newContact);
-            break;        
+            break;
         case "remove":
             const removeContact = await contacts.removeContact(id);
             console.log(removeContact);
@@ -24,7 +38,4 @@ const invokeAction = async ({action, id, name, email, phone}) => {
     }
 }
 
-// invokeAction({action: "list"})
-// invokeAction({action: "get", id: "10"})
-// invokeAction({action: "add", name: "Max", email: "max@gmail.com", phone: "(202) 202-202"})
-// invokeAction({action: "remove", id: "62a4620e0990c01df4e75ca0"})
+invokeAction(argv);
